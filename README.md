@@ -53,7 +53,7 @@ $('#container').freetile({
 Demo
 ====
 
-[Demo](http://yconst.com/web/assemblage) at [yconst.com](http://yconst.com)
+[Demo](http://yconst.com/web/freetile) at [yconst.com](http://yconst.com)
 
 License
 ========
