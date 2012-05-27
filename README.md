@@ -50,6 +50,11 @@ $('#container').freetile({
 });
 </pre>
 
+Demo
+====
+
+[Demo](http://yconst.com/web/assemblage) at [yconst.com](http://yconst.com)
+
 License
 ========
 
