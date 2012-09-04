@@ -130,7 +130,7 @@
         },
         
         //
-        // Sub (Internal) Methods
+        // "Internal" Methods
         // _________________________________________________________
         
         // Setup Options Object
@@ -228,47 +228,53 @@
             {
                 // Variable declaration.
                 var $this = $(this),
-                    ElementWidth = $this.outerWidth(true),
-                    ElementHeight = $this.outerHeight(true),
-                    ElementRight = 0,
-                    IndexStart = 0, 
-                    IndexEnd = 0,
-                    BestScore = 0,
                     j = 0;
+
+                o.ElementWidth = $this.outerWidth(true);
+                o.ElementHeight = $this.outerHeight(true);
+                o.ElementTop = 0;
+                o.IndexStart = 0; 
+                o.IndexEnd = 0;
+                o.BestScore = 0;
+                o.TestedTop = 0;
+                o.TestedLeft = 0;
+
 
                 // 1.   Determine Element Position
                 // ___________________________________________________
 
                 // Find out the true top position of element
                 // for position 0 (in case it spans multiple elements)
-                var ElementTop = o.currentPos[0].top;
-                for (j = 1; j < o.currentPos.length && o.currentPos[j].left < ElementWidth; j++)
+                o.TestedTop = o.currentPos[0].top;
+                for (j = 1; j < o.currentPos.length && o.currentPos[j].left < o.ElementWidth; j++)
                 {
-                    ElementTop = Math.max(ElementTop, o.currentPos[j].top);
+                    o.TestedTop = Math.max(o.TestedTop, o.currentPos[j].top);
                 }
-                IndexEnd = j;
-                BestScore = o.scoreFunction(IndexStart, IndexEnd, 0, ElementTop, ElementWidth, ElementHeight);
+                o.ElementTop = o.TestedTop;
+                o.IndexEnd = j;
+                o.BestScore = o.scoreFunction(o);
 
                 // Element is now successfully placed at position 0.
                 // As a next step, investigate the rest of available positions
                 // as to whether they are better.
-                for (var i = 1; (i < o.currentPos.length) && (o.currentPos[i].left + ElementWidth <= o.containerWidth); i++)
+                for (var i = 1; (i < o.currentPos.length) && (o.currentPos[i].left + o.ElementWidth <= o.containerWidth); i++)
                 {
-                    var t = o.currentPos[i].top;
-                    for (j = i + 1; (j < o.currentPos.length) && (o.currentPos[j].left - o.currentPos[i].left < ElementWidth); j++)
+                    o.TestedLeft = o.currentPos[i].left;
+                    o.TestedTop = o.currentPos[i].top;
+                    for (j = i + 1; (j < o.currentPos.length) && (o.currentPos[j].left - o.currentPos[i].left < o.ElementWidth); j++)
                     {
-                        t = Math.max(t, o.currentPos[j].top);
+                        o.TestedTop = Math.max(o.TestedTop, o.currentPos[j].top);
                     }
-                    var NewScore = o.scoreFunction(IndexStart, IndexEnd, o.currentPos[i].left, t, ElementWidth, ElementHeight);
-                    if (NewScore > BestScore) 
+                    var NewScore = o.scoreFunction(o);
+                    if (NewScore > o.BestScore) 
                     {
-                        IndexStart = i;
-                        IndexEnd = j;
-                        ElementTop = t;
-                        BestScore = NewScore;
+                        o.IndexStart = i;
+                        o.IndexEnd = j;
+                        o.ElementTop = o.TestedTop;
+                        o.BestScore = NewScore;
                     }
                 }
-                // At this point 1 <= IndexEnd <= Len.
+                // At this point 1 <= o.IndexEnd <= Len.
                 
 
                 // 2.   Apply Element Position
@@ -280,8 +286,8 @@
                 // New Position
                     pos = 
                     {
-                        left: o.currentPos[IndexStart].left + o.xPadding,
-                        top: ElementTop + o.yPadding
+                        left: o.currentPos[o.IndexStart].left + o.xPadding,
+                        top: o.ElementTop + o.yPadding
                     };
 
                 // Position the element only if it's position actually changes.
@@ -308,8 +314,8 @@
                         // 3. The y-offset position of the element is within the viewport.
                         // Callback counter will be
                         // updated on animation end.
-                        if ((curoffset.top + ElementHeight > o.viewportY && curoffset.top < o.viewportYH ||
-                             offset.top + ElementHeight > o.viewportY && offset.top < o.viewportYH)) 
+                        if ((curoffset.top + o.ElementHeight > o.viewportY && curoffset.top < o.viewportYH ||
+                             offset.top + o.ElementHeight > o.viewportY && offset.top < o.viewportYH)) 
                         {
 
                             aniObj.f = 'animate'
@@ -332,13 +338,12 @@
                 // a.   Store the height of the last element of the span.
                 //      If a new insertion point is to be inserted at the end of the
                 //      new element span, it should have this height.
-                var LastSpanTop = o.currentPos[IndexEnd - 1].top,
-                    LastSpanRight = o.currentPos[IndexEnd]? o.currentPos[IndexEnd].left : o.containerWidth;
-                
-                ElementRight = o.currentPos[IndexStart].left + ElementWidth;
+                var LastSpanTop = o.currentPos[o.IndexEnd - 1].top,
+                    LastSpanRight = o.currentPos[o.IndexEnd]? o.currentPos[o.IndexEnd].left : o.containerWidth,
+                    ElementRight = o.currentPos[o.IndexStart].left + o.ElementWidth;
 
                 // b.   Update height in insertion column.
-                o.currentPos[IndexStart].top = ElementTop + ElementHeight;
+                o.currentPos[o.IndexStart].top = o.ElementTop + o.ElementHeight;
 
                 // c. If there are columns after the insertion point,
                 //    remove them, up until the last occupied column.
@@ -346,11 +351,11 @@
                 //    add an insertion point at X: ElementLeft + ElementWidth, Y:LastSpanTop
                 if (ElementRight < LastSpanRight) 
                 {
-                    o.currentPos.splice(IndexStart + 1, IndexEnd - IndexStart - 1, {left: ElementRight, top: LastSpanTop} );
+                    o.currentPos.splice(o.IndexStart + 1, o.IndexEnd - o.IndexStart - 1, {left: ElementRight, top: LastSpanTop} );
                 } 
                 else 
                 {
-                    o.currentPos.splice(IndexStart + 1, IndexEnd - IndexStart - 1);
+                    o.currentPos.splice(o.IndexStart + 1, o.IndexEnd - o.IndexStart - 1);
                 }
             });
         },
@@ -508,13 +513,16 @@
             persistentCallback : false,
             forceWidth : false,
             containerWidthStep : undefined,
-            scoreFunction: function(IndexStart, IndexEnd, ElementLeft, ElementTop, ElementWidth, ElementHeight) 
+            scoreFunction: function(o) 
             {
+                // Minimum Available Variable set
+                // o.IndexStart, o.IndexEnd, o.TestedLeft, o.TestedTop, o.ElementWidth, o.ElementHeight
+
                 // The following rule would add a bit of bias to the left.
-                //return -ElementTop * 8 - ElementLeft;
+                //return -(o.TestedTop) * 8 - (o.TestedLeft);
 
                 // Simple least-height heuristic rule (default)
-                return -ElementTop;
+                return -(o.TestedTop);
             }
         },
         
