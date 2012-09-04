@@ -16,12 +16,28 @@ menu, footer, header, nav, section, summary, time, mark, audio, video {
 /*	Stuf
 	------	*/
 
+body {
+	background: #e9eaeb;
+	font: 12px/16px Helvetica, Arial, sans-serif;
+}
+
 #freetile-demo {
 	margin: 50px auto;
 	max-width: 960px;
 }
 
+.test {
+	border: 1px solid #ddd;
+	margin: 30px 0;
+}
+
+.third.test {
+	float: left;
+	width: 80px;
+}
+
 .element {
 	background: #585a5a;
-	border: 1px solid #fff;
+	border-right: 1px solid #e9eaeb;
+	border-bottom: 1px solid #e9eaeb;
 }
