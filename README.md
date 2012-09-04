@@ -32,7 +32,7 @@ $('#container').freetile();
 </pre>
 
 
-Enable animation, with an element delay of 30ms:
+Enable animation, with a per-element delay of 30ms:
 
 <pre>
 $('#container').freetile({
@@ -47,6 +47,16 @@ Specify a custom element selector:
 <pre>
 $('#container').freetile({
 	selector: '.thumbs'
+});
+</pre>
+
+Specify a scoring function with a preference for left side placement:
+
+<pre>
+$('#container').freetile({
+	scoreFunction: function(o) {
+		return -(o.TestedTop) * 8 - (o.TestedLeft);
+	}
 });
 </pre>
 
