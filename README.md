@@ -46,7 +46,7 @@ Specify a custom element selector:
 
 <pre>
 $('#container').freetile({
-	selector: '.thumbs'
+	selector: 'customSelector'
 });
 </pre>
 
@@ -57,6 +57,14 @@ $('#container').freetile({
 	scoreFunction: function(o) {
 		return -(o.TestedTop) * 8 - (o.TestedLeft);
 	}
+});
+</pre>
+
+Append some elements to an existing container:
+
+<pre>
+$('#container').freetile({
+	contentToAppend: 'someSelector';
 });
 </pre>
 
