@@ -213,7 +213,8 @@
         // Get content to be appended.
         // _________________________________________________________
 
-        newContent : function(content) {
+        newContent : function(content) 
+        {
             if ((typeof content === 'object') || (typeof content === 'string')) 
             {
                 var $content = $(content);
