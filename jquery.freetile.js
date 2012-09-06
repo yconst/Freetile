@@ -37,11 +37,16 @@
     $.fn.freetile = function( method ) 
     {
         // Method calling logic
-        if ( typeof Freetile[ method ] === 'function' ) {
+        if ( typeof Freetile[ method ] === 'function' ) 
+        {
           return Freetile[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-        } else if ( typeof method === 'object' || ! method ) {
+        } 
+        else if ( typeof method === 'object' || ! method ) 
+        {
           return Freetile.init.apply( this, arguments );
-        } else {
+        } 
+        else 
+        {
           $.error( 'Method ' +  method + ' does not exist on jQuery.Freetile' );
         }
         
@@ -50,30 +55,28 @@
     
     var Freetile = 
     {
-        
         //
         // "Public" Methods
         // _________________________________________________________
         
         // Method 1.
-        // Smart and generic method that chooses between
+        // Smart and generic method that selects between
         // initialize, re-layout or append.
         init : function(options) 
         {
-            var container = this;
-            
-            // Setup Options
-            var o = Freetile.setupOptions(container, options);
+            var container = this,
+                o = Freetile.setupOptions(container, options),
+                c = Freetile.newContent(o.contentToAppend);
             
             // Setup container bindings for resize and custom events
             if (!o.tiled) Freetile.setupContainerBindings(container, o);
             
             // If there is content to append and container has been already
             // tiled, continue in append mode.
-            if (o.tiled && !$.isEmptyObject(o.contentToAppend)) 
+            if (o.tiled && c) 
             {
-                container.append(o.contentToAppend);
-                o.contentToAppend.filter(o.selector || '*').imagesLoaded(function() 
+                container.append(c);
+                c.filter(o.selector || '*').imagesLoaded(function() 
                 {
                     Freetile.positionAll(container, o);
                 });
@@ -87,7 +90,6 @@
                     Freetile.positionAll(container, o);
                 });
             }
-            
             return container;
         },
         
@@ -96,22 +98,20 @@
         // content to append.
         append : function(options) 
         {
-            var container = this;
-            
-            // Setup Options
-            var o = Freetile.setupOptions(container, options);
+            var container = this,
+                o = Freetile.setupOptions(container, options),
+                c = Freetile.newContent(o.contentToAppend);
             
             // If there is content to append and container has been already
             // tiled, continue in append mode.
-            if (o.tiled && !$.isEmptyObject(o.contentToAppend)) 
+            if (o.tiled && c) 
             {
-                container.append(o.contentToAppend);
-                o.contentToAppend.imagesLoaded(function() 
+                container.append(c);
+                c.imagesLoaded(function() 
                 {
                     Freetile.positionAll(container, o);
                 });
             }
-            
             return container;
         },
         
@@ -120,13 +120,12 @@
         // is done.
         layout : function(options) 
         {
-            // Setup Options
-            var o = Freetile.setupOptions(this, options);
+            var container = this,
+                o = Freetile.setupOptions(container, options);
             
             // Position Elements
-            Freetile.positionAll(this, o);
-            
-            return this;
+            Freetile.positionAll(container, o);
+            return container;
         },
         
         //
@@ -138,7 +137,6 @@
 
         setupOptions : function(container, options) 
         {
-
             // Get the data object from the container. If it doesn't exist it probably means
             // it's the first time Freetile is called..
             var containerData = container.data('FreetileData');
@@ -167,9 +165,7 @@
             // _animate is an internal variable that indicates whether animation is
             // POSSIBLE & REQUESTED !!
             newOptions._animate = newOptions.animate && newOptions.tiled && $.isEmptyObject(newOptions.contentToAppend);
-            
             this.reset.callback = newOptions.persistentCallback && newOptions.callback ? newOptions.callback : function() {};
-
             return newOptions;
         },
         
@@ -184,6 +180,7 @@
                 var win = $(window),
                     curWidth = win.width(),
                     curHeight = win.height();
+
                 win.resize(function() 
                 {
                     clearTimeout(container.data("FreetileTimeout"));
@@ -211,6 +208,18 @@
                 });
             }
             return container;
+        },
+
+        // Get content to be appended.
+        // _________________________________________________________
+
+        newContent : function(content) {
+            if ((typeof content === 'object') || (typeof content === 'string')) 
+            {
+                var $content = $(content);
+                if (!$.isEmptyObject($content)) return $content;
+            }
+            return false;
         },
         
         // Position a single element.
@@ -297,7 +306,8 @@
                 {
                     var aniObj = {el : $this, f : 'css', d : 0};
 
-                    if (o._animate && !$this.hasClass('noanim')) {
+                    if (o._animate && !$this.hasClass('noanim')) 
+                    {
                         // Current offset
                         var curoffset = $this.offset(),
 
