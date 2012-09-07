@@ -21,19 +21,31 @@ body {
 	font: 12px/16px Helvetica, Arial, sans-serif;
 }
 
+h4 {
+	clear: both;
+	width: 100%;
+}
+
 #freetile-demo {
 	margin: 50px auto;
 	max-width: 962px;
 }
 
 .test {
-	border: 1px solid #ddd;
+	background: #eceeef;
+	border: 1px solid #ccc;
 	margin: 30px 0;
 }
 
 .third.test {
 	float: left;
+	clear: right;
 	width: 80px;
+}
+
+.fourth.test {
+	clear: both;
+	width: 100%;
 }
 
 .element {
