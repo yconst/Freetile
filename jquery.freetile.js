@@ -215,10 +215,10 @@
 
         newContent : function(content) 
         {
-            if ((typeof content === 'object') || (typeof content === 'string')) 
+            if ( (typeof content === 'object' && !$.isEmptyObject(content)) 
+                || (typeof content === 'string' && $(content).length ) ) 
             {
-                var $content = $(content);
-                if (!$.isEmptyObject($content)) return $content;
+                return $(content);
             }
             return false;
         },
