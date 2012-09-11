@@ -234,7 +234,7 @@
             // ^        ^
             // Start    End
 
-            elements.each(function() 
+            elements.each(function(i) 
             {
                 // Variable declaration.
                 var $this = $(this),
@@ -243,6 +243,7 @@
                 o.ElementWidth = $this.outerWidth(true);
                 o.ElementHeight = $this.outerHeight(true);
                 o.ElementTop = 0;
+                o.ElementIndex = i;
                 o.IndexStart = 0; 
                 o.IndexEnd = 0;
                 o.BestScore = 0;
