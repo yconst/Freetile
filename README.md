@@ -68,6 +68,55 @@ $('#container').freetile({
 });
 </pre>
 
+Options
+====
+
+<pre>
+	selector
+</pre>
+Elements matching the selector will be tiled, others will be ignored.
+
+<pre>
+	animate
+</pre>
+Should elements be animated? Animation will occur for elements that have been already placed and are visible, i.e. elements that are about to appear or are invisible will not be animated (but will still be tiled). Furthermore, elements with both their starting and ending position outside the window area will not be animated. 
+Default: false
+
+<pre>
+	elementDelay
+</pre>
+A delay may be inserted between each element's animation start, resulting in more appealing animations. Units in ms.
+Default: 0
+
+<pre>
+	containerResize
+</pre>
+Should the content be re-tiled on window resize?
+Default: true
+
+<pre>
+	containerAnimate
+</pre>
+Should the container of the elements be animated, as its size changes? Useful if the placement of surrounding content depends on the container size.
+Default: false
+
+<pre>
+	customEvents
+</pre>
+One or more custom events to trigger re-tiling.
+
+<pre>
+	callback
+</pre>
+A callback function to be called when tiling is done. Please note that this includes the animation delay.
+
+<pre>
+	persistentCallback
+</pre>
+Should the callback function be persistent or reset after next tiling (one-shot)? Useful for triggering common tasks at the end of the animation process.
+Default: false
+
+
 Demo
 ====
 
