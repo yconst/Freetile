@@ -1,5 +1,5 @@
 //  Freetile.js
-//  v0.2.9
+//  v0.2.11
 //
 //  A dynamic layout plugin for jQuery.
 //
@@ -477,12 +477,11 @@
                 CalculatedCSS.position = 'relative';
             }
             
-            // If forceWidth is true, apply new width to the container.
-            if (o.forceWidth) 
+            // If forceWidth is true, apply new width to the container
+            // using step specified in containerWidthStep.
+            if (o.forceWidth && o.containerWidthStep > 0) 
             {
-                CalculatedCSS.width = o.containerWidthStep ? 
-                o.containerWidthStep * (parseInt(container.width() / o.containerWidthStep, 10)) : 
-                o._columns * o._colWidth;
+                CalculatedCSS.width = o.containerWidthStep * (parseInt(container.width() / o.containerWidthStep, 10))
             }
             
             // Apply initial CSS properties.
@@ -516,15 +515,15 @@
         // Defaults
         defaults : 
         {
-            selector : undefined,
+            selector : '*',
             animate : false,
             elementDelay : 0,
             containerResize : true,
-            containerAnimate : true,
-            customEvents : undefined,
+            containerAnimate : false, 
+            customEvents : '',
             persistentCallback : false,
             forceWidth : false,
-            containerWidthStep : undefined,
+            containerWidthStep : 1,
             scoreFunction: function(o) 
             {
                 // Minimum Available Variable set
