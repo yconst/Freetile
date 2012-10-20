@@ -1,5 +1,5 @@
 //  Freetile.js
-//  v0.2.11
+//  v0.2.12
 //
 //  A dynamic layout plugin for jQuery.
 //
