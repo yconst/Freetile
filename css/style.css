@@ -48,6 +48,11 @@ h4 {
 	width: 100%;
 }
 
+.empty.test {
+	padding: 10px 0;
+	background: #efeff1;
+}
+
 .element {
 	background: #585a5a;
 	border-right: 1px solid #e9eaeb;

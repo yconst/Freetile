@@ -26,6 +26,10 @@
 			$('<div class="element" style="color:#fff;"></div>').width(w).height(h).appendTo('.fourth.test');
 		}
 
+		$( '.empty.test' ).empty();
+        $( '.empty.test' ).freetile({
+            callback: function() { $( '.empty.test' ).html( 'Callback from empty container.' ); }
+        });
 
 		$('#freetile-demo').children().each(function()
 		{
