@@ -416,7 +416,17 @@
             // Count elements.
             o.ElementsCount = Elements.length;
 
-            if (!o.ElementsCount) return(false);
+            // If container is empty, set height to zero, call callback and return.
+            if (!o.ElementsCount) 
+            {
+                if (typeof(o.callback == "function"))
+                {
+                    o.callback(o);
+                }
+                var f = o._animate && o.containerAnimate ? 'animate' : 'css';
+                container[f]({ 'height' : '0px'});
+                return container;
+            }
             
             // Store the container's visibility properties.
             var disp = container.css('display') || '';
