@@ -463,8 +463,9 @@
             // 2. Position Elements and apply styles.
             //
 
-            // Set elements position to absolute first. http://bit.ly/hpo7Nv
-            Elements.css({position: 'absolute'});
+            // Set elements display to block (http://jsfiddle.net/vH2g9/1/) 
+            // and position to absolute first. (http://bit.ly/hpo7Nv)
+            Elements.css({'display' : 'block', 'position' : 'absolute'});
             Freetile.calculatePositions(container, Elements, o);
             Freetile.applyStyles(o);
             
