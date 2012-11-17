@@ -372,13 +372,28 @@
             });
         },
 
+        prepareElements: function(container, elements, o) // Container, elements, options
+        {
+            // Set elements display to block (http://jsfiddle.net/vH2g9/1/) 
+            // and position to absolute first. (http://bit.ly/hpo7Nv)
+            elements.each(function()
+            {
+                var $this = $(this);
+                if ($this.is(':visible'))
+                {
+                    $this.css({'display' : 'block'});
+                }
+            }).css({'position' : 'absolute'});
+        },
+
         // Process styleQueue
         // This is set up like jQuery masonry, rather than directly applying
         // styles in the positioning loop. For some reason, it yields a performance gain
         // of about 7x (in Safari 5.1.4)!!
         // _________________________________________________________
 
-        applyStyles : function(o) {
+        applyStyles : function(o) 
+        {
             var obj;
             for (var i=0, len = o.styleQueue.length; i < len; i++) 
             {
@@ -463,9 +478,7 @@
             // 2. Position Elements and apply styles.
             //
 
-            // Set elements display to block (http://jsfiddle.net/vH2g9/1/) 
-            // and position to absolute first. (http://bit.ly/hpo7Nv)
-            Elements.css({'display' : 'block', 'position' : 'absolute'});
+            Freetile.prepareElements(container, Elements, o);
             Freetile.calculatePositions(container, Elements, o);
             Freetile.applyStyles(o);
             
