@@ -577,7 +577,7 @@
     $.fn.imagesLoaded = function( callback ) 
     {
         var $this = this,
-            $images = $this.find('img:not(.load-complete)').add( $this.filter('img:not(.load-complete)') ),
+            $images = $this.find('img:not(.load-complete)').add( $this.filter('img:not(.load-complete)') ).filter(function () { return !(this.complete || this.readyState == 'complete'); }),
             len = $images.length,
             current = len,
             images_src = [],
