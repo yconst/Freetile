@@ -135,11 +135,12 @@
             var container = this,
                 options = container.data('FreetileData');
 
+            // remove all child element's inline style
+            Freetile.resetElementsStyle(container, options);
             // unbind window resize
             $(window).off("resize", this.windowResizeCallback);
             // unbind custom event
             container.off(options.customEvents, this.customEventsCallback);
-
             return true;
         },
 
@@ -563,6 +564,27 @@
             // Mark elements as tiled.
             Elements.addClass("tiled");
             return container;
+        },
+
+        // Resetting the main layout algorythm and removing all
+        // inline styles
+        // _________________________________________________________
+        resetElementsStyle: function(container, o){
+            var Elements;
+            // Get elements
+            if ($.isEmptyObject(o.contentToAppend))
+            {
+                Elements = o.selector ? container.children(o.selector) : container.children();
+            }
+            else
+            {
+                Elements = o.selector ? o.contentToAppend.filter(o.selector) : o.contentToAppend;
+            }
+
+            Elements.each(function(){
+                var $this = $(this);
+                $this.attr("style", "");
+            });
         },
 
         // Defaults
