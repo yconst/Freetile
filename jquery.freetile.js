@@ -6,136 +6,152 @@
 //  Copyright (c) 2010-2012, Ioannis (Yannis) Chatzikonstantinou, All rights reserved.
 //  http://www.yconst.com
 //  http://www.volatileprototypes.com
-// 
-//  Redistribution and use in source and binary forms, with or without modification, 
+//
+//  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//      - Redistributions of source code must retain the above copyright 
+//      - Redistributions of source code must retain the above copyright
 //  notice, this list of conditions and the following disclaimer.
-//      - Redistributions in binary form must reproduce the above copyright 
-//  notice, this list of conditions and the following disclaimer in the documentation 
+//      - Redistributions in binary form must reproduce the above copyright
+//  notice, this list of conditions and the following disclaimer in the documentation
 //  and/or other materials provided with the distribution.
-//  
-//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
-//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-//  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-//  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-//  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-//  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+//  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+//  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+//  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+//  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+//  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 //  OF SUCH DAMAGE.
 
 (function( $ ){
-    
+
     "use strict";
 
     //
     // Entry Point
     // _________________________________________________________
-    
-    $.fn.freetile = function( method ) 
+
+    $.fn.freetile = function( method )
     {
         // Method calling logic
-        if ( typeof Freetile[ method ] === 'function' ) 
+        if ( typeof Freetile[ method ] === 'function' )
         {
           return Freetile[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-        } 
-        else if ( typeof method === 'object' || ! method ) 
+        }
+        else if ( typeof method === 'object' || ! method )
         {
           return Freetile.init.apply( this, arguments );
-        } 
-        else 
+        }
+        else
         {
           $.error( 'Method ' +  method + ' does not exist on jQuery.Freetile' );
         }
-        
+
         return this;
     };
-    
-    var Freetile = 
+
+    var Freetile =
     {
         //
         // "Public" Methods
         // _________________________________________________________
-        
+
         // Method 1.
         // Smart and generic method that selects between
         // initialize, re-layout or append.
-        init : function(options) 
+        init : function(options)
         {
             var container = this,
                 o = Freetile.setupOptions(container, options),
                 c = Freetile.newContent(o.contentToAppend);
-            
+
             // Setup container bindings for resize and custom events
             if (!o.tiled) Freetile.setupContainerBindings(container, o);
-            
+
             // If there is content to append and container has been already
             // tiled, continue in append mode.
-            if (o.tiled && c) 
+            if (o.tiled && c)
             {
                 container.append(c);
-                c.filter(o.selector || '*').imagesLoaded(function() 
+                c.filter(o.selector || '*').imagesLoaded(function()
                 {
                     Freetile.positionAll(container, o);
                 });
             // Otherwise continue by first just positioning the elements
             // and then doing a re-layout if any images are not yet loaded.
-            } 
-            else 
+            }
+            else
             {
-                container.imagesLoaded(function() 
+                container.imagesLoaded(function()
                 {
                     Freetile.positionAll(container, o);
                 });
             }
             return container;
         },
-        
+
         // Method 2.
         // Similar to method 1 but only does something if there is
         // content to append.
-        append : function(options) 
+        append : function(options)
         {
             var container = this,
                 o = Freetile.setupOptions(container, options),
                 c = Freetile.newContent(o.contentToAppend);
-            
+
             // If there is content to append and container has been already
             // tiled, continue in append mode.
-            if (o.tiled && c) 
+            if (o.tiled && c)
             {
                 container.append(c);
-                c.imagesLoaded(function() 
+                c.imagesLoaded(function()
                 {
                     Freetile.positionAll(container, o);
                 });
             }
             return container;
         },
-        
+
         // Method 3.
         // Layout all elements just once. Single shot. Nothing else
         // is done.
-        layout : function(options) 
+        layout : function(options)
         {
             var container = this,
                 o = Freetile.setupOptions(container, options);
-            
+
             // Position Elements
             Freetile.positionAll(container, o);
             return container;
         },
-        
+
+        // Method 4.
+        // Removes all bindings
+        destroy: function()
+        {
+            var container = this,
+                options = container.data('FreetileData');
+
+            // remove all child element's inline style
+            Freetile.resetElementsStyle(container, options);
+            // unbind window resize
+            $(window).off("resize", this.windowResizeCallback);
+            // unbind custom event
+            container.off(options.customEvents, this.customEventsCallback);
+            return true;
+        },
+
         //
         // "Internal" Methods
         // _________________________________________________________
-        
+
         // Setup Options Object
         // _________________________________________________________
 
-        setupOptions : function(container, options) 
+        setupOptions : function(container, options)
         {
             // Get the data object from the container. If it doesn't exist it probably means
             // it's the first time Freetile is called..
@@ -149,7 +165,7 @@
                 this.reset,
                 options
             );
-            
+
             // At this point we have a nice options object which is a special blend
             // of user-defined options, stored preferences and defaults. Let's save it.
             container.data('FreetileData', newOptions);
@@ -157,7 +173,7 @@
             // Temporary variable to denote whether the container has already been
             // processed before.
             newOptions.tiled = (containerData !== undefined);
-            
+
             // The real 'animate' property is dependent, apart from user preference,
             // on whether this is the first time that Freetile is being called (should
             // be false) and whether we are appending content (should be false too).
@@ -168,44 +184,58 @@
             this.reset.callback = newOptions.persistentCallback && newOptions.callback ? newOptions.callback : function() {};
             return newOptions;
         },
-        
+
+        // Window resize callback to be proxied in the
+        // setupContainerBindings function below
+        // _________________________________________________________
+
+        windowResizeCallback: function(container, curWidth, curHeight)
+        {
+            clearTimeout(container.data("FreetileTimeout"));
+            container.data("FreetileTimeout", setTimeout(function()
+            {
+                var win = $(window),
+                    newWidth = win.width(),
+                    newHeight = win.height();
+
+                //Call function only if the window *actually* changes size!
+                if (newWidth != curWidth || newHeight != curHeight)
+                {
+                    curWidth = newWidth,
+                    curHeight = newHeight;
+                    container.freetile('layout');
+                }
+            }, 400) );
+        },
+
+        // Custom event callback to be proxied to the binding step below
+        // this = container
+        // _________________________________________________________
+
+        customEventsCallback: function(container)
+        {
+            clearTimeout(container.data("FreetileTimeout"));
+            container.data("FreetileTimeout", setTimeout(function() { container.freetile('layout'); }, 400) );
+        },
+
         // Setup bindings to resize and custom events.
         // _________________________________________________________
 
-        setupContainerBindings : function(container, o) 
+        setupContainerBindings : function(container, o)
         {
             // Bind to window resize.
-            if (o.containerResize) 
+            if (o.containerResize)
             {
                 var win = $(window),
                     curWidth = win.width(),
                     curHeight = win.height();
 
-                win.resize(function() 
-                {
-                    clearTimeout(container.data("FreetileTimeout"));
-                    container.data("FreetileTimeout", setTimeout(function() 
-                    {
-                        var newWidth = win.width(),
-                        newHeight = win.height();
-                        //Call function only if the window *actually* changes size!
-                        if (newWidth != curWidth || newHeight != curHeight) 
-                        {
-                            curWidth = newWidth,
-                            curHeight = newHeight;
-                            container.freetile('layout');
-                        }
-                    }, 400) );
-                });
+                win.resize($.proxy(this.windowResizeCallback, container, container, curWidth, curHeight));
             }
             // Bind to custom events.
-            if (o.customEvents) 
+            if (o.customEvents)
             {
-                container.bind(o.customEvents, function() 
-                {
-                    clearTimeout(container.data("FreetileTimeout"));
-                    container.data("FreetileTimeout", setTimeout(function() { container.freetile('layout'); }, 400) );
-                });
+                container.bind(o.customEvents, $.proxy(this.customEventsCallback, container, container));
             }
             return container;
         },
@@ -213,28 +243,28 @@
         // Get content to be appended.
         // _________________________________________________________
 
-        newContent : function(content) 
+        newContent : function(content)
         {
-            if ( (typeof content === 'object' && !$.isEmptyObject(content)) 
-                || (typeof content === 'string' && $(content).length ) ) 
+            if ( (typeof content === 'object' && !$.isEmptyObject(content))
+                || (typeof content === 'string' && $(content).length ) )
             {
                 return $(content);
             }
             return false;
         },
-        
+
         // Position a single element.
         // _________________________________________________________
 
         calculatePositions : function(container, elements, o) // Container, elements, options
-        { 
+        {
             // Position index:
             // |    |   |       Old columns
             // |      |         New column
             // ^        ^
             // Start    End
 
-            elements.each(function(i) 
+            elements.each(function(i)
             {
                 // Variable declaration.
                 var $this = $(this),
@@ -244,7 +274,7 @@
                 o.ElementHeight = $this.outerHeight(true);
                 o.ElementTop = 0;
                 o.ElementIndex = i;
-                o.IndexStart = 0; 
+                o.IndexStart = 0;
                 o.IndexEnd = 0;
                 o.BestScore = 0;
                 o.TestedTop = 0;
@@ -277,7 +307,7 @@
                         o.TestedTop = Math.max(o.TestedTop, o.currentPos[j].top);
                     }
                     var NewScore = o.scoreFunction(o);
-                    if (NewScore > o.BestScore) 
+                    if (NewScore > o.BestScore)
                     {
                         o.IndexStart = i;
                         o.IndexEnd = j;
@@ -286,7 +316,7 @@
                     }
                 }
                 // At this point 1 <= o.IndexEnd <= Len.
-                
+
 
                 // 2.   Apply Element Position
                 // ___________________________________________________
@@ -295,7 +325,7 @@
                 var curpos = $this.position(),
 
                 // New Position
-                    pos = 
+                    pos =
                     {
                         left: o.currentPos[o.IndexStart].left + o.xPadding,
                         top: o.ElementTop + o.yPadding
@@ -304,30 +334,30 @@
                 // Position the element only if it's position actually changes.
                 // This check is useful when we are re-arranging an already packed arrangement.
                 // Some elements may still need to be in the same positions.
-                if (curpos.top != pos.top || curpos.left != pos.left) 
+                if (curpos.top != pos.top || curpos.left != pos.left)
                 {
                     var aniObj = {el : $this, f : 'css', d : 0};
 
-                    if (o._animate && !$this.hasClass('noanim')) 
+                    if (o._animate && !$this.hasClass('noanim'))
                     {
                         // Current offset
                         var curoffset = $this.offset(),
 
                         // Easily find new offset without lots of calculations
-                        offset = 
+                        offset =
                         {
                             left: pos.left + (curoffset.left - curpos.left),
                             top: pos.top + (curoffset.top - curpos.top)
                         };
 
                         // Animate only if:
-                        // 1. Animate option is possible and enabled 
+                        // 1. Animate option is possible and enabled
                         // 2. The element is allowed to animate (doesn't have the 'noanim' class)
                         // 3. The y-offset position of the element is within the viewport.
                         // Callback counter will be
                         // updated on animation end.
                         if ((curoffset.top + o.ElementHeight > o.viewportY && curoffset.top < o.viewportYH ||
-                             offset.top + o.ElementHeight > o.viewportY && offset.top < o.viewportYH)) 
+                             offset.top + o.ElementHeight > o.viewportY && offset.top < o.viewportYH))
                         {
 
                             aniObj.f = 'animate'
@@ -336,11 +366,11 @@
                             ++(o.iteration);
                             // Increase the animation delay value.
                             o.currentDelay += o.elementDelay;
-                        } 
-                    } 
+                        }
+                    }
                     aniObj.style = pos;
                     o.styleQueue.push(aniObj);
-                } 
+                }
                 // Update the callback counter.
                  --(o.iteration);
 
@@ -361,11 +391,11 @@
                 //    remove them, up until the last occupied column.
                 //    also: If there is leftover (i.e. ElementLeft + ElementWidth < ContainerWidth)
                 //    add an insertion point at X: ElementLeft + ElementWidth, Y:LastSpanTop
-                if (ElementRight < LastSpanRight) 
+                if (ElementRight < LastSpanRight)
                 {
                     o.currentPos.splice(o.IndexStart + 1, o.IndexEnd - o.IndexStart - 1, {left: ElementRight, top: LastSpanTop} );
-                } 
-                else 
+                }
+                else
                 {
                     o.currentPos.splice(o.IndexStart + 1, o.IndexEnd - o.IndexStart - 1);
                 }
@@ -374,7 +404,7 @@
 
         prepareElements: function(container, elements, o) // Container, elements, options
         {
-            // Set elements display to block (http://jsfiddle.net/vH2g9/1/) 
+            // Set elements display to block (http://jsfiddle.net/vH2g9/1/)
             // and position to absolute first. (http://bit.ly/hpo7Nv)
             elements.each(function()
             {
@@ -392,27 +422,27 @@
         // of about 7x (in Safari 5.1.4)!!
         // _________________________________________________________
 
-        applyStyles : function(o) 
+        applyStyles : function(o)
         {
             var obj;
-            for (var i=0, len = o.styleQueue.length; i < len; i++) 
+            for (var i=0, len = o.styleQueue.length; i < len; i++)
             {
                 obj = o.styleQueue[i];
-                if (obj.f == 'animate') 
+                if (obj.f == 'animate')
                 {
                     obj.el.delay(obj.d).animate(obj.style, $.extend( true, {}, o.animationOptions));
-                } 
-                else 
+                }
+                else
                 {
                     obj.el.css(obj.style);
                 }
             }
         },
-        
+
         // Main layout algorithm
         // _________________________________________________________
 
-        positionAll : function(container, o) 
+        positionAll : function(container, o)
         {
             //
             // 1. Initialize
@@ -427,12 +457,12 @@
             {
                 var Elements = o.selector ? o.contentToAppend.filter(o.selector) : o.contentToAppend;
             }
-            
+
             // Count elements.
             o.ElementsCount = Elements.length;
 
             // If container is empty, set height to zero, call callback and return.
-            if (!o.ElementsCount) 
+            if (!o.ElementsCount)
             {
                 if (typeof(o.callback == "function"))
                 {
@@ -442,30 +472,30 @@
                 container[f]({ 'height' : '0px'});
                 return container;
             }
-            
+
             // Store the container's visibility properties.
             var disp = container.css('display') || '';
             var vis = container.css('visibility') || '';
-            
+
             // Temporarily show the container...
             container.css({ display: 'block', width: '', visibility: 'hidden' });
 
             // Calculate container width
             o.containerWidth = container.width();
-            
+
             // Get saved positions of elements if they exist and if we are appending
             // new content.
             var savedPos = container.data("FreetilePos");
             o.currentPos = !$.isEmptyObject(o.contentToAppend) && savedPos ? savedPos : [{left: 0, top: 0}];
-        
+
             // Calculate container padding for correct element positioning
             o.xPadding = parseInt(container.css("padding-left"), 10);
             o.yPadding = parseInt(container.css("padding-top"), 10);
-            
+
             // Set viewport y-offset and height
             o.viewportY = $(window).scrollTop();
             o.viewportYH = o.viewportY + $(window).height();
-            
+
             // Initialize some variables in the options object
             o.iteration = Elements.length;
             o.currentDelay = 0;
@@ -473,7 +503,7 @@
 
             // Set Callback. (will be cleared on next run)
             o.animationOptions.complete = function() { if (--(o.iteration) <= 0) o.callback(o); } ;
-            
+
             //
             // 2. Position Elements and apply styles.
             //
@@ -481,7 +511,7 @@
             Freetile.prepareElements(container, Elements, o);
             Freetile.calculatePositions(container, Elements, o);
             Freetile.applyStyles(o);
-            
+
             //
             // 3. Finalize
             //
@@ -494,33 +524,33 @@
 
             if (disp) CalculatedCSS.display = disp;
             if (vis) CalculatedCSS.visibility = vis;
-            
+
             // If container position is static make it relative to properly position elements.
-            if (container.css('position') == 'static') 
+            if (container.css('position') == 'static')
             {
                 CalculatedCSS.position = 'relative';
             }
-            
+
             // If forceWidth is true, apply new width to the container
             // using step specified in containerWidthStep.
-            if (o.forceWidth && o.containerWidthStep > 0) 
+            if (o.forceWidth && o.containerWidthStep > 0)
             {
                 CalculatedCSS.width = o.containerWidthStep * (parseInt(container.width() / o.containerWidthStep, 10))
             }
-            
+
             // Apply initial CSS properties.
             container.css(CalculatedCSS);
-            
+
             // Re-use CalculatedCSS to apply height.
             var Tops = $.map(o.currentPos, function(n, i) {return n.top;});
             CalculatedCSS = {height: Math.max.apply(Math, Tops)};
-            
+
             // Apply or animate.
-            if (o._animate && o.containerAnimate) 
+            if (o._animate && o.containerAnimate)
             {
-                container.stop().animate(CalculatedCSS, $.extend( true, {}, o.animationOptions)); 
+                container.stop().animate(CalculatedCSS, $.extend( true, {}, o.animationOptions));
             }
-            else 
+            else
             {
                 container.css(CalculatedCSS);
             }
@@ -535,20 +565,41 @@
             Elements.addClass("tiled");
             return container;
         },
-        
+
+        // Resetting the main layout algorythm and removing all
+        // inline styles
+        // _________________________________________________________
+        resetElementsStyle: function(container, o){
+            var Elements;
+            // Get elements
+            if ($.isEmptyObject(o.contentToAppend))
+            {
+                Elements = o.selector ? container.children(o.selector) : container.children();
+            }
+            else
+            {
+                Elements = o.selector ? o.contentToAppend.filter(o.selector) : o.contentToAppend;
+            }
+
+            Elements.each(function(){
+                var $this = $(this);
+                $this.attr("style", "");
+            });
+        },
+
         // Defaults
-        defaults : 
+        defaults :
         {
             selector : '*',
             animate : false,
             elementDelay : 0,
             containerResize : true,
-            containerAnimate : false, 
+            containerAnimate : false,
             customEvents : '',
             persistentCallback : false,
             forceWidth : false,
             containerWidthStep : 1,
-            scoreFunction: function(o) 
+            scoreFunction: function(o)
             {
                 // Minimum Available Variable set
                 // o.IndexStart, o.IndexEnd, o.TestedLeft, o.TestedTop, o.ElementWidth, o.ElementHeight
@@ -560,21 +611,21 @@
                 return -(o.TestedTop);
             }
         },
-        
+
         // Overriding options.
-        reset : 
+        reset :
         {
             animationOptions : { complete: function() {} },
             callback : function() {},
             contentToAppend : {}
         }
     };
-    
+
     //
     // Helper Methods
     // _________________________________________________________
-    
-    $.fn.imagesLoaded = function( callback ) 
+
+    $.fn.imagesLoaded = function( callback )
     {
         var $this = this,
             $images = $this.find('img:not(.load-complete)').add( $this.filter('img:not(.load-complete)') ).filter(function () { return !(this.complete || this.readyState == 'complete'); }),
@@ -583,31 +634,31 @@
             images_src = [],
             blank = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
-        function triggerCallback() 
+        function triggerCallback()
         {
             callback.call( $this, $images );
         }
 
-        function triggerStep() 
+        function triggerStep()
         {
             if ($.fn.imagesLoaded.step) $.fn.imagesLoaded.step.call( $this, current, len, $images );
         }
 
-        function imgLoadedI( event ) 
+        function imgLoadedI( event )
         {
             if ( --current <= 0)
             {
                 current = len;
                 $images.unbind( 'load error', imgLoadedI )
                 .bind( 'load error', imgLoadedII )
-                .each(function() 
+                .each(function()
                 {
                     this.src = images_src.shift();
                 });
             }
         }
 
-        function imgLoadedII( event ) 
+        function imgLoadedII( event )
         {
             setTimeout( triggerStep );
             if ( --current <= 0 && event.target.src !== blank )
@@ -617,12 +668,12 @@
             }
         }
 
-        if ( !len ) 
+        if ( !len )
         {
             triggerCallback();
         }
 
-        $images.bind( 'load error',  imgLoadedI ).each( function() 
+        $images.bind( 'load error',  imgLoadedI ).each( function()
         {
             images_src.push( this.src );
             // webkit hack from http://groups.google.com/group/jquery-dev/browse_thread/thread/eee6ab7b2da50e1f
