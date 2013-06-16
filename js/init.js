@@ -64,8 +64,9 @@
 			elementDelay: 10,
 			callback: function() 
 			{
-				var time = new Date() - start;
-				$this.prev().html($this.prev().html() + " (" + time + "ms)");
+				var time = new Date() - start,
+					prev = $this.prevAll('h4').first();
+				prev.html(prev.html() + " (" + time + "ms)");
 				var nxt = $this.nextAll('div:not(.images)').first();
 				if (nxt.length)
 				{
@@ -102,7 +103,16 @@
 		    }
 
 		    var items = [];
-		    var pages = data.pages.slice(0, 12);
+		    var pages = data.pages;
+
+		    if ($this.hasClass('ignore-load-check'))
+		    {
+		    	pages = pages.slice(0, 9);
+		    }
+		    else
+		    {
+		    	pages = pages.slice(9, 18);
+		    }
 		    for ( var i=0, len = pages.length; i < len; i++ ) 
 		    {
 		    	var page = pages[i];
@@ -112,6 +122,10 @@
 		    }
 		    $this.removeClass('loading').append( items.join('') );
 
+		    if ($this.hasClass('ignore-load-check'))
+		    {
+		    	$this.children().addClass('ignore-load-check').css({'width' : '300px', 'height' : '162px'});
+		    }
 		    var start = new Date();
 			$this.freetile(
 			{
@@ -119,8 +133,9 @@
 				elementDelay: 10,
 				callback: function() 
 				{
-					var time = new Date() - start;
-					$this.prev().html($this.prev().html() + " (" + time + "ms)");
+					var time = new Date() - start,
+					prev = $this.prevAll('h4').first();
+					prev.html(prev.html() + " (" + time + "ms)");
 					var nxt = $this.nextAll('div.images').first();
 					if (nxt.length)
 					{

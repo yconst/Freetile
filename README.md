@@ -122,6 +122,12 @@ Default: false
 </pre>
 One or more custom events to trigger re-tiling.
 
+<pre>
+	loadCheckSelector
+</pre>
+Any elements matching this selector will be excluded from making sure their images are loaded (through ImagesLoaded).
+Useful if inline dimension styles are being applied to e.g. images.
+Default: :not(.ignore-load-check)
 
 <pre>
 	callback
@@ -139,7 +145,7 @@ Default: false
 Demo
 ====
 
-[Demo](http://yconst.com/web/freetile) at [yconst.com](http://yconst.com)
+[Demo](http://apex.yconst.com/freetile-demo/freetile.html) at [yconst.com](http://yconst.com)
 
 License
 ========

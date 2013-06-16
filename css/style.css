@@ -53,7 +53,7 @@ h4 {
 	background: #efeff1;
 }
 
-.images.test.loading {
+.test.loading {
 	height: 32px;
 	background: #efeff1 url(loader-alt.gif) center no-repeat;
 }
