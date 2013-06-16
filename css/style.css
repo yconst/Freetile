@@ -49,8 +49,13 @@ h4 {
 }
 
 .empty.test {
-	padding: 5px 0 20px 0;
+	padding: 0 0 14px 0;
 	background: #efeff1;
+}
+
+.images.test.loading {
+	height: 32px;
+	background: #efeff1 url(loader-alt.gif) center no-repeat;
 }
 
 .element {
