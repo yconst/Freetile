@@ -31,13 +31,29 @@
             callback: function() { $( '.empty.test' ).html( 'Callback from empty container.' ); }
         });
 
-		$('#freetile-demo').children().each(function()
+		$('#freetile-demo').children('div').first().each(function()
 		{
-			$(this).freetile({
-				animate: true,
-				elementDelay: 10
-			});
+			$(this).testpack();
+			
 		});
 	});
+
+	$.fn.testpack = function() {
+		var $this = $(this);
+		var start = new Date();
+		$this.freetile({
+			animate: true,
+			elementDelay: 10,
+			callback: function() {
+				var time = new Date() - start;
+				$this.prev().html($this.prev().html() + " (" + time + "ms)");
+				var nxt = $this.nextAll('div').first();
+				if (nxt)
+				{
+					nxt.testpack();
+				}
+			}
+		});
+	}
 })(jQuery)
-				
+
