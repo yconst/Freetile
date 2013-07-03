@@ -125,8 +125,8 @@ One or more custom events to trigger re-tiling.
 <pre>
 	loadCheckSelector
 </pre>
-Any elements matching this selector will be excluded from making sure their images are loaded (through ImagesLoaded).
-Useful if inline dimension styles are being applied to e.g. images.
+Freetile will make sure that images of elements matching this selector are loaded (using ImagesLoaded).
+Useful to exclude elements if inline dimension styles are being applied to e.g. images.
 Default: :not(.ignore-load-check)
 
 <pre>
