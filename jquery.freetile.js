@@ -462,6 +462,7 @@
             // If container is empty, set height to zero, call callback and return.
             if (!o.ElementsCount)
             {
+                container.data("FreetilePos", null);
                 if (typeof(o.callback == "function"))
                 {
                     o.callback(o);
