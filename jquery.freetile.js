@@ -1,5 +1,5 @@
 /*!
- * Freetile.js v0.3.0
+ * Freetile.js v0.3.1
  * A dynamic layout plugin for jQuery.
  */
 //
