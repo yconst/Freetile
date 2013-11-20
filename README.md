@@ -141,6 +141,25 @@ A callback function to be called when tiling is done. Please note that this incl
 Should the callback function be persistent or reset after next tiling (one-shot)? Useful for triggering common tasks at the end of the animation process.
 Default: false
 
+<pre>
+  gutter
+</pre>
+Adds a specified. margin around each tile. If set to 5 each tile with have a 5px margin on each side.
+Default: 0
+
+<pre>
+  fadeIn
+</pre>
+When set to true, tiles fade in after they are positioned. This allows positioning, styles and layout to be added before tiles become
+visible.
+Default: false
+
+<pre>
+  fadeInSpeed
+ </pre>
+Set the speed (integer) to change how fast/slow the tiles fade in when fadeIn is set to true.
+Default: 100
+
 
 Demo
 ====
