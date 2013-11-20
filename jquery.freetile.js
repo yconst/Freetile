@@ -506,6 +506,19 @@
             // 2. Position Elements and apply styles.
             //
 
+            // If fade in is set fade in elements first
+            Elements.each(function(index){
+              if(o.fadeIn && !$(this).hasClass('noanim'))
+              {
+                $(this).fadeIn(o.fadeInSpeed);
+              }
+            });
+
+            // Add margin to elements if gutter is not set to 0
+            Elements.each(function(index){
+              $(this).css({ 'margin': o.gutter, 'display' : 'block' });
+            });
+
             Freetile.prepareElements(container, Elements, o);
             Freetile.calculatePositions(container, Elements, o);
             Freetile.applyStyles(o);
@@ -597,7 +610,10 @@
             forceWidth : false,
             containerWidthStep : 1,
             loadCheckSelector : ':not(.ignore-load-check)',
-            scoreFunction: function(o)
+            gutter: 0,
+            fadeIn: false,
+            fadeInSpeed: 100,
+            scoreFunctin: function(o)
             {
                 // Minimum Available Variable set
                 // o.IndexStart, o.IndexEnd, o.TestedLeft, o.TestedTop, o.ElementWidth, o.ElementHeight
