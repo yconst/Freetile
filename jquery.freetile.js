@@ -510,6 +510,7 @@
             Elements.each(function(index){
               if(o.fadeIn && !$(this).hasClass('noanim'))
               {
+                $(this).hide();
                 $(this).fadeIn(o.fadeInSpeed);
               }
             });
