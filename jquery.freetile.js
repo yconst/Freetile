@@ -613,7 +613,7 @@
             gutter: 0,
             fadeIn: false,
             fadeInSpeed: 100,
-            scoreFunctin: function(o)
+            scoreFunction: function(o)
             {
                 // Minimum Available Variable set
                 // o.IndexStart, o.IndexEnd, o.TestedLeft, o.TestedTop, o.ElementWidth, o.ElementHeight
