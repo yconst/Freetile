@@ -167,7 +167,7 @@
 
             // At this point we have a nice options object which is a special blend
             // of user-defined options, stored preferences and defaults. Let's save it.
-            container.data('FreetileData', newOptions);
+            containerData = container.data('FreetileData', newOptions);
 
             // Temporary variable to denote whether the container has already been
             // processed before.
