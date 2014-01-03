@@ -137,9 +137,9 @@
             // remove all child element's inline style
             Freetile.resetElementsStyle(container, options);
             // unbind window resize
-            $(window).off("resize", this.windowResizeCallback);
+            $(window).off("resize", this.resizeCallback);
             // unbind custom event
-            container.off(options.customEvents, this.customEventsCallback);
+            container.off(options.customEvents, this.resizeCallback);
             return true;
         },
 
@@ -186,37 +186,15 @@
 
         // Window resize callback to be proxied in the
         // setupContainerBindings function below
-        // _________________________________________________________
-
-        windowResizeCallback: function(container, curWidth, curHeight)
-        {
-            clearTimeout(container.data("FreetileTimeout"));
-            container.data("FreetileTimeout", setTimeout(function()
-            {
-                var win = $(window),
-                    newWidth = win.width(),
-                    newHeight = win.height();
-
-                //Call function only if the window *actually* changes size!
-                if (newWidth != curWidth || newHeight != curHeight)
-                {
-                    curWidth = newWidth,
-                    curHeight = newHeight;
-                    container.freetile('layout');
-                }
-            }, 400) );
-        },
-
         // Custom event callback to be proxied to the binding step below
         // this = container
         // _________________________________________________________
 
-        customEventsCallback: function(container)
+        resizeCallback: function(container)
         {
             clearTimeout(container.data("FreetileTimeout"));
             container.data("FreetileTimeout", setTimeout(function() { container.freetile('layout'); }, 400) );
         },
-
         // Setup bindings to resize and custom events.
         // _________________________________________________________
 
@@ -229,12 +207,12 @@
                     curWidth = win.width(),
                     curHeight = win.height();
 
-                win.resize($.proxy(this.windowResizeCallback, container, container, curWidth, curHeight));
+                win.resize($.proxy(this.resizeCallback, container, container, curWidth, curHeight));
             }
             // Bind to custom events.
             if (o.customEvents)
             {
-                container.bind(o.customEvents, $.proxy(this.customEventsCallback, container, container));
+                container.bind(o.customEvents, $.proxy(this.resizeCallback, container, container));
             }
             return container;
         },
