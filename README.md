@@ -164,7 +164,7 @@ $('#container').freetile({
 
 *Gotcha: CSS transforms do not effect document flow so your tile container height will no longer reflect the true height of your grid* 
 
-Make sure you are also using CSS3 transitions on each element in your grid to get it to animate:
+Make sure you are also using CSS3 transitions on each element in your grid to get it to animate: 
 
 <pre>
 
