@@ -428,7 +428,7 @@
                 obj = o.styleQueue[i];
 
 				// always use csstransforms if available
-				if(o.csstransforms3d){
+				if(o.csstransforms3d) {
 					var translate3d = "translate3d(" + obj.style.left + "px," + obj.style.top + "px,0)";
 
 					obj.el.css("-moz-transform", translate3d);
@@ -436,6 +436,14 @@
 					obj.el.css("-o-transform", translate3d);
 					obj.el.css("-ms-transform", translate3d);
 					obj.el.css("transform", translate3d);
+
+					// invoke the callback when the transition ends
+					if (o.animationOptions.complete != null) {
+						obj.el.on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function (e) {
+							$(this).off("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend");
+							o.animationOptions.complete.call(o)
+						});
+					}
 				}
 				else{
 					if (obj.f == 'animate')
@@ -566,6 +574,14 @@
 				container.css("-o-transform", translate3d);
 				container.css("-ms-transform", translate3d);
 				container.css("transform", translate3d);
+
+				// invoke the callback when the transition ends
+				if (o.animationOptions.complete != null) {
+					container.on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function (e) {
+						$(this).off("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend");
+						o.animationOptions.complete.call(o)
+					});
+				}
 			}
 			else {
 				// Apply or animate.
