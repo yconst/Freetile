@@ -426,14 +426,27 @@
             for (var i=0, len = o.styleQueue.length; i < len; i++)
             {
                 obj = o.styleQueue[i];
-                if (obj.f == 'animate')
-                {
-                    obj.el.delay(obj.d).animate(obj.style, $.extend( true, {}, o.animationOptions));
-                }
-                else
-                {
-                    obj.el.css(obj.style);
-                }
+
+				// always use csstransforms if available
+				if(o.csstransforms3d){
+					var translate3d = "translate3d(" + obj.style.left + "px," + obj.style.top + "px,0)";
+
+					obj.el.css("-moz-transform", translate3d);
+					obj.el.css("-webkit-transform", translate3d);
+					obj.el.css("-o-transform", translate3d);
+					obj.el.css("-ms-transform", translate3d);
+					obj.el.css("transform", translate3d);
+				}
+				else{
+					if (obj.f == 'animate')
+					{
+						obj.el.delay(obj.d).animate(obj.style, $.extend( true, {}, o.animationOptions));
+					}
+					else
+					{
+						obj.el.css(obj.style);
+					}
+				}
             }
         },
 
@@ -543,15 +556,26 @@
             var Tops = $.map(o.currentPos, function(n, i) {return n.top;});
             CalculatedCSS = {height: Math.max.apply(Math, Tops)};
 
-            // Apply or animate.
-            if (o._animate && o.containerAnimate)
-            {
-                container.stop().animate(CalculatedCSS, $.extend( true, {}, o.animationOptions));
-            }
-            else
-            {
-                container.css(CalculatedCSS);
-            }
+
+			// always use csstransforms if available
+			if(o.csstransforms3d){
+				var translate3d = "translate3d(" + CalculatedCSS.left + "px," + CalculatedCSS.top + "px,0)";
+
+				container.css("-moz-transform", translate3d);
+				container.css("-webkit-transform", translate3d);
+				container.css("-o-transform", translate3d);
+				container.css("-ms-transform", translate3d);
+				container.css("transform", translate3d);
+			}
+			else {
+				// Apply or animate.
+				if (o._animate && o.containerAnimate) {
+					container.stop().animate(CalculatedCSS, $.extend(true, {}, o.animationOptions));
+				}
+				else {
+					container.css(CalculatedCSS);
+				}
+			}
 
             // Callback
             if (o.iteration <= 0) o.callback(o);
@@ -597,6 +621,8 @@
             forceWidth : false,
             containerWidthStep : 1,
             loadCheckSelector : ':not(.ignore-load-check)',
+			csstransforms3d: false,
+
             scoreFunction: function(o)
             {
                 // Minimum Available Variable set

@@ -141,6 +141,45 @@ A callback function to be called when tiling is done. Please note that this incl
 Should the callback function be persistent or reset after next tiling (one-shot)? Useful for triggering common tasks at the end of the animation process.
 Default: false
 
+CSS3 GPU animations
+-------------------
+
+Using CSS3 `translate3d` significantly improves animation performance, especially on mobile devices, you can force CSS3 translations with this new option.  
+
+<pre>
+	csstransforms3d
+</pre>
+If set to true, it means that css3 3D transforms (on the GPU) are available and should be used for all animations over the slower `jquery.animate`. 
+Default: false
+
+Should be set to the value of a feature detect (e.g. using Modernizr)
+
+<pre>
+$('#container').freetile({
+	...
+	selector: '.grid-item',
+	csstransforms3d: $('html').is('.csstransforms3d')
+});
+</pre>
+
+*Gotcha: CSS transforms do not effect document flow so your tile container height will no longer reflect the true height of your grid* 
+
+Make sure you are also using CSS3 transitions on each element in your grid to get it to animate:
+
+<pre>
+
+.grid-item{
+	webkit-transition: all .25s ease-out;
+	-moz-transition: all .25s ease-out;
+	-o-transition: all .25s ease-out;
+	-ms-transition: all .25s ease-out;
+	transition: all .25s ease-out;
+}
+
+</pre>
+
+
+
 
 Demo
 ====
