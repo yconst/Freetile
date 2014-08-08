@@ -136,6 +136,8 @@
 
             // remove all child element's inline style
             Freetile.resetElementsStyle(container, options);
+            // remove container inline style
+            $(container).attr("style", "");
             // unbind window resize
             $(window).off("resize", this.windowResizeCallback);
             // unbind custom event
