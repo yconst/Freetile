@@ -1,0 +1,36 @@
+{
+  "name": "freetile",
+  "version": "0.3.1",
+  "homepage": "https://github.com/yconst/Freetile",
+  "authors": [
+    "Yannis Chatzikonstantinou"
+  ],
+  "description": "Freetile is a plugin for jQuery that enables the organization of webpage content in an efficient, dynamic and responsive layout. It can be applied to a container element and it will attempt to arrange it's children in a layout that makes optimal use of screen space, by \"packing\" them in a tight arrangement. Freetile has been the layout engine behind Assemblage and Assemblage Plus for almost two years, and now it becomes available as an independent Open Source project.",
+  "main": "jquery.freetile.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "dependencies": {
+    "jquery": ">=1.10.1"
+  },
+  "keywords": [
+    "freetile",
+    "jquery",
+    "masonry",
+    "vgrid",
+    "wookmark",
+    "grid",
+    "column"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ]
+}
