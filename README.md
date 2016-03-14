@@ -1,7 +1,7 @@
 Freetile
 ========
 
-Freetile is a plugin for [jQuery](http://jquery.com) that enables the organization of webpage content in an efficient, dynamic and responsive layout. It can be applied to a container element and it will attempt to arrange it's children in a layout that makes optimal use of screen space, by "packing" them in a tight arrangement. Freetile has been the layout engine behind [Assemblage](http://yconst.com/web/assemblage) and [Assemblage Plus](http://yconst.com/web/assemblage-plus) for almost two years, and now it becomes available as an independent Open Source project. 
+Freetile is a plugin for [jQuery](http://jquery.com) that enables the organization of webpage content in an efficient, dynamic and responsive layout. It can be applied to a container element and it will attempt to arrange its children in a layout that makes optimal use of screen space, by "packing" them in a tight arrangement. Freetile has been the layout engine behind [Assemblage](http://yconst.com/web/assemblage) and [Assemblage Plus](http://yconst.com/web/assemblage-plus) for almost two years, and now it becomes available as an independent Open Source project. 
 
 Features
 ========
@@ -144,7 +144,7 @@ Default: false
 CSS3 GPU animations
 -------------------
 
-Using CSS3 `translate3d` significantly improves animation performance, especially on mobile devices, you can force CSS3 translations with this new option.  
+Using CSS3 `translate3d` significantly improves animation performance, especially on mobile devices. You can force CSS3 translations with this new option.  
 
 <pre>
 	csstransforms3d
