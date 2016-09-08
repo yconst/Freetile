@@ -184,7 +184,7 @@ Make sure you are also using CSS3 transitions on each element in your grid to ge
 Demo
 ====
 
-[Demo](http://apex.yconst.com/freetile-demo/freetile.html) at [yconst.com](http://yconst.com)
+[Demo](http://yconst.com/freetile-demo/) at [yconst.com](http://yconst.com)
 
 License
 ========
