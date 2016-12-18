@@ -18,7 +18,7 @@ Additionally, Freetile has the following key features:
 
 - A smart animation routine allows distinguishing between elements that is meaningful to be animated and ones that are not (e.g. elements that have been just added to the arrangement, or those that are not visible). Special classes allow for explicitly limiting animation to select elements.
 
-- It has been battle-tested through it's use in the many hundreds sites that make use of the [Assemblage](http://yconst.com/web/assemblage) and [Assemblage Plus](http://yconst.com/web/assemblage-plus) templates. Furthermore, it has been used for layout in projects such as [Properietary Polymers](http://pp.yconst.com) and [Reffffound](http://reffffound.yconst.com).
+- It has been battle-tested through it's use in the many hundreds sites that make use of the [Assemblage](http://yconst.com/web/assemblage) and [Assemblage Plus](http://yconst.com/web/assemblage-plus) templates.
 
 
 Usage
