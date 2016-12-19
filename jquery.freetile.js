@@ -160,7 +160,7 @@
 
             // Generate the options object.
             var newOptions = $.extend(true,
-                {},
+                {container:container},
                 this.defaults,
                 containerData,
                 this.reset,
